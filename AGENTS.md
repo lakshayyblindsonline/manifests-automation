@@ -4,7 +4,7 @@
 
 Help a nontechnical colleague operate and troubleshoot Lakshay's order automation tools. Read `README.md` first. Give concrete, short steps using the actual button labels. The separate Word handover document contains detailed business procedures; it is not included in this repository. Ask for the relevant section if the problem depends on it rather than inventing its contents.
 
-This handover was checked on 9 November 2026 against the four uploaded HTML files and the relevant earlier chats: “Check order numbers on site”, “Create KiwiExpress order checker”, “Generalize supplier order processing”, “Build order lookup extension”, “Check LAS orders for Blaze” and “Build consignment lookup script”. Historical requirements below are carried forward so a new agent does not need those chats. Current files and new evidence must still be inspected when diagnosing a problem.
+This handover was checked on 9 November 2026 against the four uploaded HTML files, the separately supplied `Automation Handover.odt`, and the relevant earlier chats: “Check order numbers on site”, “Create KiwiExpress order checker”, “Generalize supplier order processing”, “Build order lookup extension”, “Check LAS orders for Blaze” and “Build consignment lookup script”. Historical requirements below are carried forward so a new agent does not need those chats. Current files and new evidence must still be inspected when diagnosing a problem.
 
 ## Repository scope
 
@@ -132,6 +132,18 @@ Save/recovery requirements:
 Storage on the LAS origin: `localStorage` prefix `lasBlazeDispatchAutoV3:` for metadata/runtime/per-row outcomes; receipts `lasBlazeDispatchSaveReceiptV3:{order}` for Blaze, adding `:supplier:{encodeURIComponent(exactSupplier)}` for other suppliers. The target tab also has session ownership state. Keep historical keys and default-Blaze compatibility during upgrades. Per-row persistence and 100-row table pages were introduced for lists around 1,600 orders; avoid rewriting the whole dataset after each row.
 
 Reports retain original rows plus `LAS dispatch:` result/details, Save-intent/verified UTC times, Carrier and Supplier. Outcomes include `SAVED_VERIFIED`, `ALREADY_DISPATCHED`, `SKIPPED_EXISTING_CONSIGNMENT`, `SKIPPED_NOT_SUPPLIER`, `SKIPPED_NO_ITEM_STATUS`, `SKIPPED_NOT_FOUND`, `REVIEW`, `INVALID_INPUT`, `SAVE_UNVERIFIED`, `PENDING`. Download each supplier's report separately.
+
+## Business procedures from the separate handover guide
+
+The user supplied `Automation Handover.odt` after the initial documentation draft. Preserve these source-specific rules when preparing input files; do not replace them with assumptions about what a carrier tracking number normally looks like:
+
+- Confirmation by spreadsheet: copy the selected supplier's not-confirmed list from LAS and match full order references against its supplier sheet. Produce `Order Ref, Supplier Ref, Customer Name`; use NOT FOUND for genuinely unmatched references and report ambiguous/conflicting matches separately. Never invent references.
+- Australian dispatch: download Direct Freight **Online Tools → Connote Listing** for the required date range, then match against the chosen supplier's not-dispatched LAS list. Output `Order Ref, Connote, ConnoteDate` using the actual consignment number and dispatch/despatch date. Select **Direct Freight Express** in LAS. The account/login details are supplied privately through the company, not through this repository.
+- New Zealand dispatch: copy all Bolts shipment rows including headings and the final row. Match LAS Order Ref to Bolts **Connote Ref**, retaining **Connote Date** and **Freight Connote**. Only candidates with a valid Freight Connote proceed to Kiwi checking; blanks, N/A and messages such as “Rural Delivery - No Rates Defined” are not valid freight references.
+- Check those complete order references in the Kiwi checker. Only exact, unambiguous matches with result `FOUND` proceed to the NZ dispatch CSV; leave `NO_RESPONSE` and `REVIEW` out for follow-up. Any genuine returned delivery status is accepted.
+- For this NZ workflow, output `Order Ref, Connote, ConnoteDate` with **Connote equal to the complete original Order Ref**, including suffixes. Use the matching **Bolts Connote Date** for ConnoteDate. Do not substitute Bolts Freight Connote, Bolts Tracking# or a Kiwi pickup/delivery date. Choose **Kiwi Express Couriers (first LAS option)**. This order-reference-as-Connote rule is the user's established procedure.
+
+Use exact order-reference matches, retain leading zeros, and report missing dates, duplicate/conflicting matches and exclusions separately. Do not mix a confirmation supplier reference into a dispatch file. Keep source spreadsheets, screenshots, customer rows and the full illustrated handover guide outside this public repository unless the user explicitly asks to publish them. The guide also refers to separately supplied `Manifests SOP.docx` and `Handover Document.docx`.
 
 ## Related tools from earlier conversations, not included here
 

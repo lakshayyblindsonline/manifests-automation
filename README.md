@@ -80,7 +80,7 @@ An optional **Despatch** column does not change the confirmation or scheduled di
 **Start saves changes automatically.** Finish or cancel any existing LAS edit first.
 
 1. Launch the dispatch bookmark from LAS. Its banner should say **AUTOMATIC DISPATCH V7**.
-2. Upload **Order Ref, Connote, ConnoteDate**. “Connote” means the carrier's tracking number.
+2. Upload **Order Ref, Connote, ConnoteDate**. “Connote” is the tracking reference to save in LAS; follow the handover guide for your carrier.
 3. Check the columns, **Supplier** and **Carrier**. Defaults are Blaze Blinds and Direct Freight Express; change them as needed.
 4. Click **Start / resume batch — SAVE**. Keep the LAS tab and helper open.
 5. Download the results CSV. Use **Pause after current order** before changing supplier or carrier.
@@ -96,7 +96,7 @@ Order Ref,Connote,ConnoteDate
 AU1234567WB,001234567,09/11/2026
 ```
 
-Dispatch needs an actual tracking number and dispatch date, rather than a supplier reference.
+For Australian Direct Freight batches, use the consignment number and actual dispatch/despatch date from the carrier report. For the **New Zealand Bolts + Kiwi workflow**, include only matched orders with a valid Bolts Freight Connote and a Kiwi result of `FOUND`: set **Connote to the full Order Ref**, use the **Bolts Connote Date**, and choose **Kiwi Express Couriers (first LAS option)**. The detailed handover guide explains the matching steps.
 
 ## If something goes wrong
 
